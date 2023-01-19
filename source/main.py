@@ -1,12 +1,15 @@
 import pygame
 import os
 import numpy as np
+import time
 
-from adts import House, VacuumRobot
+from adts import House, VacuumRobot, Controller
 
 # Hyperparameters
 FREQUENCY = 60  # Hz
 N_DUST = 50  # number of dust
+LINEAR_VELOCITY = 100  # Pixel/s
+ANGULAR_VELOCITY = np.pi / 4  # Rad/s
 WIDTH, HEIGHT = 960, 540  # Pixels
 ROBOT_LENGTH = 50  # Pixels
 DUST_WIDTH, DUST_HEIGHT = 18, 12  # Pixels
@@ -27,6 +30,7 @@ DUST_IMAGE = pygame.transform.scale(
 GREY = (220, 220, 220)
 BLACK = (0, 0, 0)
 BROWN = (174, 71, 40)
+START_TIME = time.time()
 
 
 def draw_window(house: House, robot: VacuumRobot):
@@ -37,10 +41,12 @@ def draw_window(house: House, robot: VacuumRobot):
     cleaned_text = TEXT_FONT.render(
         f"Cleaned: {round(100*(N_DUST-len(dust))/N_DUST)}%", 1, BLACK
     )
+    time_text = TEXT_FONT.render(f"Time: {round(time.time()-START_TIME)}s", 1, BLACK)
 
     WIN.fill(GREY)  # Background
 
     WIN.blit(cleaned_text, (0, 0))  # Cleaned percent text
+    WIN.blit(time_text, (0, cleaned_text.get_height()))  # Cleaned time text
 
     # Draw walls
     for w in walls:
@@ -50,17 +56,41 @@ def draw_window(house: House, robot: VacuumRobot):
     for d in dust:
         WIN.blit(DUST_IMAGE, d - np.array([DUST_WIDTH // 2, DUST_HEIGHT // 2]))
 
-    WIN.blit(
-        pygame.transform.rotate(ROBOT_IMAGE, np.rad2deg(theta)),
-        (round(x) - ROBOT_LENGTH // 2, round(y) - ROBOT_LENGTH // 2),
+    rotate_and_blit(
+        WIN,
+        ROBOT_IMAGE,
+        (round(x), round(y)),
+        (ROBOT_LENGTH // 2, ROBOT_LENGTH // 2),
+        np.rad2deg(theta),
     )  # Robot
 
     pygame.display.update()
 
 
+def rotate_and_blit(surf, image, pos, originPos, angle):
+
+    # offset from pivot to center
+    image_rect = image.get_rect(topleft=(pos[0] - originPos[0], pos[1] - originPos[1]))
+    offset_center_to_pivot = pygame.math.Vector2(pos) - image_rect.center
+
+    # rotated offset from pivot to center
+    rotated_offset = offset_center_to_pivot.rotate(-angle)
+
+    # rotated image center
+    rotated_image_center = (pos[0] - rotated_offset.x, pos[1] - rotated_offset.y)
+
+    # get a rotated image
+    rotated_image = pygame.transform.rotate(image, angle)
+    rotated_image_rect = rotated_image.get_rect(center=rotated_image_center)
+
+    # rotate and blit the image
+    surf.blit(rotated_image, rotated_image_rect)
+
+
 def main():
     house = House(WIDTH, HEIGHT)
-    robot = VacuumRobot(ROBOT_LENGTH / 2)
+    robot = VacuumRobot(ROBOT_LENGTH // 2)
+    controller = Controller(LINEAR_VELOCITY, ANGULAR_VELOCITY)
 
     # FIXME: Change walls and initial robot position
     y = HEIGHT // 3
@@ -85,6 +115,17 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
+
+        robot.move(controller.get_controls(), 1 / FREQUENCY)
+
+        # Vacuum
+        for vacuumed in robot.vacuum(house.get_dust_spots()):
+            house.clean(*vacuumed)
+
+        # Hit wall
+        if robot.hits_wall(house.get_wall_spots()):
+
+            controller.collided()
 
         draw_window(house, robot)
 
