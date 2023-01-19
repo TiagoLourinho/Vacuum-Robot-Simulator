@@ -105,8 +105,8 @@ def show_final_score(final_time):
     WIN.blit(
         time_text,
         (
-            (WIDTH - message_text.get_width()) // 2,
-            (HEIGHT - message_text.get_height()) // 2 + message_text.get_height(),
+            (WIDTH - time_text.get_width()) // 2,
+            (HEIGHT - time_text.get_height()) // 2 + message_text.get_height(),
         ),
     )  # Cleaned time text
 
