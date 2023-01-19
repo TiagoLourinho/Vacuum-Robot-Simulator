@@ -7,7 +7,7 @@ from adts import House, VacuumRobot, Controller
 
 # Hyperparameters
 FREQUENCY = 60  # Hz
-N_DUST = 50  # number of dust
+N_DUST = 100  # number of dust
 LINEAR_VELOCITY = 100  # Pixel/s
 ANGULAR_VELOCITY = np.pi / 4  # Rad/s
 WIDTH, HEIGHT = 960, 540  # Pixels
@@ -39,9 +39,10 @@ def draw_window(house: House, robot: VacuumRobot):
     dust = house.get_dust_spots()
     walls = house.get_wall_spots()
     cleaned_text = TEXT_FONT.render(
-        f"Cleaned: {round(100*(N_DUST-len(dust))/N_DUST)}%", 1, BLACK
+        f"Cleaned: {int(100*(N_DUST-len(dust))/N_DUST)}%", 1, BLACK
     )
-    time_text = TEXT_FONT.render(f"Time: {round(time.time()-START_TIME)}s", 1, BLACK)
+    seconds = round(time.time() - START_TIME)
+    time_text = TEXT_FONT.render(f"Time: {seconds//60}min{seconds%60}s", 1, BLACK)
 
     WIN.fill(GREY)  # Background
 
@@ -87,6 +88,36 @@ def rotate_and_blit(surf, image, pos, originPos, angle):
     surf.blit(rotated_image, rotated_image_rect)
 
 
+def show_final_score(final_time):
+    message_text = TEXT_FONT.render(f"All cleaned!", 1, BLACK)
+    seconds = round(final_time - START_TIME)
+    time_text = TEXT_FONT.render(f"Time: {seconds//60}min{seconds%60}s", 1, BLACK)
+
+    WIN.fill(GREY)  # Background
+
+    WIN.blit(
+        message_text,
+        (
+            (WIDTH - message_text.get_width()) // 2,
+            (HEIGHT - message_text.get_height()) // 2,
+        ),
+    )  # Cleaned percent text
+    WIN.blit(
+        time_text,
+        (
+            (WIDTH - message_text.get_width()) // 2,
+            (HEIGHT - message_text.get_height()) // 2 + message_text.get_height(),
+        ),
+    )  # Cleaned time text
+
+    pygame.display.update()
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
+
+
 def main():
     house = House(WIDTH, HEIGHT)
     robot = VacuumRobot(ROBOT_LENGTH // 2)
@@ -111,6 +142,11 @@ def main():
 
     while True:
         clock.tick(FREQUENCY)
+
+        # All cleaned
+        if int(100 * (N_DUST - len(house.get_dust_spots())) / N_DUST) == 100:
+            break
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -128,6 +164,8 @@ def main():
             controller.collided()
 
         draw_window(house, robot)
+
+    show_final_score(time.time())
 
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ class Controller:
         if self.__timer is None:
 
             self.__timer = (
-                min(max(np.random.rand(), 1 / 4), 3 / 4) * 2 * np.pi / self.__default[1]
+                np.random.uniform(1 / 4, 3 / 4) * 2 * np.pi / self.__default[1]
             )
             self.__controls = np.array([0, self.__default[1]])
             self.__rotating_start = time.time()
