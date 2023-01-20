@@ -30,11 +30,6 @@ class VacuumRobot:
 
         return self.__state
 
-    def set_pose(self, x: float, y: float, theta: float) -> None:
-        """Puts the robot in the defined position"""
-
-        self.__state = np.array([x, y, theta])
-
     def hits_wall(self, wall) -> bool:
         """Checks if the robot its a wall"""
 

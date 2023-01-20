@@ -4,11 +4,14 @@ import numpy as np
 class House:
     """Represents a house with dust"""
 
-    def __init__(self, width: int, height: int) -> None:
+    def __init__(self, width: int, height: int, walls: list[tuple[int]]) -> None:
         self.__width = width
         self.__heigth = height
         self.__wall = np.full((height, width), False)
         self.__dust = np.full((height, width), False)
+
+        for w in walls:
+            self.__wall[w[1], w[0]] = True
 
     def get_wall_spots(self) -> np.array:
         """Returns the spots where there is a wall"""
@@ -19,11 +22,6 @@ class House:
         """Returns the spots where there is dust"""
 
         return list(zip(*np.flip(np.nonzero(self.__dust), axis=0)))
-
-    def add_wall(self, x: int, y: int) -> None:
-        """Adds a wall to the house"""
-
-        self.__wall[y, x] = True
 
     def generate_dust(self, N: int, dust_width: int, dust_height: int) -> None:
         """Generates `N` dust inside the house"""
@@ -43,6 +41,7 @@ class House:
                     and not self.__dust[y, x]
                     and self.is_inside_house(x, y)
                 ):
+
                     self.__dust[y, x] = True
                     break
 
@@ -117,4 +116,26 @@ class House:
                 max_y = i
                 break
 
-        return min_x + x_offset, max_x - x_offset, min_y + y_offset, max_y - y_offset
+        return (
+            min(min_x + x_offset, max_x - x_offset),
+            max(max_x - x_offset, min_x + x_offset),
+            min(min_y + y_offset, max_y - y_offset),
+            max(max_y - y_offset, min_y + y_offset),
+        )
+
+    def get_charging_station_location(self, offset) -> tuple:
+        """Returns the initial position for the robot"""
+
+        min_x, max_x, min_y, max_y = self.get_surrounding_rectangle(offset, offset)
+        while True:
+            x = np.random.randint(min_x + 1, max_x)
+            y = np.random.randint(min_y + 1, max_y)
+
+            # Generate a spot for robot without walls, dust and inside the house
+            if (
+                not self.__wall[y, x]
+                and not self.__dust[y, x]
+                and self.is_inside_house(x, y)
+            ):
+
+                return (x, y)
