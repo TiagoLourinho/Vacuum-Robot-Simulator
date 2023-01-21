@@ -177,9 +177,9 @@ def draw_walls():
 
             # Draw wall
             else:
-                for x in range(5):
-                    for y in range(5):
-                        cur = (pos[0] + x, pos[1] + y)
+                for x in range(-WALL_WIDTH // 2, WALL_WIDTH // 2 + 1):
+                    for y in range(-WALL_WIDTH // 2, WALL_WIDTH // 2 + 1):
+                        cur = (min(pos[0] + x, WIDTH - 1), min(pos[1] + y, HEIGHT - 1))
                         walls.append(cur)
                         pygame.draw.line(SCREEN, BROWN, cur, cur)
 

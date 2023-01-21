@@ -5,7 +5,7 @@ import numpy as np
 pygame.init()
 
 ##### Hyperparameters #####
-FREQUENCY = 60  # Hz
+FREQUENCY = 30  # Hz
 N_DUST = 100  # number of dust
 LINEAR_VELOCITY = 200  # Pixel/s
 ANGULAR_VELOCITY = 2 * np.pi  # Rad/s
@@ -13,6 +13,7 @@ ANGULAR_VELOCITY = 2 * np.pi  # Rad/s
 WIDTH, HEIGHT = 960, 540  # Pixels
 ROBOT_LENGTH = 50  # Pixels
 DUST_WIDTH, DUST_HEIGHT = 18, 12  # Pixels
+WALL_WIDTH = 3  # Pixels
 
 ##### Main screen #####
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))

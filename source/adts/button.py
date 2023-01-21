@@ -1,7 +1,7 @@
 import pygame
 
 
-class Button(pygame.sprite.Sprite):
+class Button:
     """Represents a clickable button"""
 
     def __init__(
@@ -13,7 +13,6 @@ class Button(pygame.sprite.Sprite):
         hover_color: tuple,
         coordinate: tuple = (0, 0),
     ) -> None:
-        super(Button, self).__init__()
 
         self.__text = font.render(text, 1, text_color)
         self.__border = 0.2
