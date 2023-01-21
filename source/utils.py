@@ -150,7 +150,9 @@ def draw_walls():
     SCREEN.fill(GREY)
     start_button = Button(TEXT_FONT, "Start Game", BLACK, BLUE, LIGHT_BLUE, (5, 5))
 
-    instruction_text = TEXT_FONT.render("Draw the house walls", 1, BLACK)
+    instruction_text = TEXT_FONT.render(
+        "Draw the house walls (or not, to use the default)", 1, BLACK
+    )
     SCREEN.blit(
         instruction_text,
         (

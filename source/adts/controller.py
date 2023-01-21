@@ -28,10 +28,12 @@ class Controller:
 
         if self.__automatic and self.__timer is None:
             # Rotating
-            self.__timer = (
-                np.random.uniform(1 / 4, 3 / 4) * 2 * np.pi / self.__default[1]
-            )
-            self.__controls = np.array([0, self.__default[1]])
+            direction = np.random.choice([-1, 1])
+            percent = np.random.uniform(1 / 4, 1)
+
+            self.__timer = percent * np.pi / self.__default[1]
+            self.__controls = np.array([0, direction * self.__default[1]])
+
             self.__rotating_start = time.time()
             self.__motors = False
 

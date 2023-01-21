@@ -4,24 +4,28 @@ import numpy as np
 class House:
     """Represents a house with dust"""
 
-    def __init__(self, width: int, height: int, walls: list[tuple[int]]) -> None:
+    def __init__(
+        self, width: int, height: int, walls: np.array, default_walls: np.array
+    ) -> None:
         self.__width = width
         self.__heigth = height
-        self.__wall = np.full((height, width), False)
+        self.__walls = np.full((height, width), False)
         self.__dust = np.full((height, width), False)
+        self.__default_walls = np.full((height, width), False)
 
         for w in walls:
-            self.__wall[w[1], w[0]] = True
+            self.__walls[w[1], w[0]] = True
+
+        for w in default_walls:
+            self.__default_walls[w[1], w[0]] = True
 
     def get_wall_spots(self) -> np.array:
         """Returns the spots where there is a wall"""
-
-        return list(zip(*np.flip(np.nonzero(self.__wall), axis=0)))
+        return np.flip(np.argwhere(self.__walls), axis=1)
 
     def get_dust_spots(self) -> np.array:
         """Returns the spots where there is dust"""
-
-        return list(zip(*np.flip(np.nonzero(self.__dust), axis=0)))
+        return np.flip(np.argwhere(self.__dust), axis=1)
 
     def generate_dust(self, N: int, dust_width: int, dust_height: int) -> None:
         """Generates `N` dust inside the house"""
@@ -31,13 +35,15 @@ class House:
         )
 
         for _ in range(N):
+
             while True:
+
                 x = np.random.randint(min_x + 1, max_x)
                 y = np.random.randint(min_y + 1, max_y)
 
                 # Generate a spot for dust without walls, dust and inside the house
                 if (
-                    not self.__wall[y, x]
+                    not self.__walls[y, x]
                     and not self.__dust[y, x]
                     and self.is_inside_house(x, y)
                 ):
@@ -57,25 +63,25 @@ class House:
 
         # Left border
         for i in range(x, -1, -1):
-            if self.__wall[y, i]:
+            if self.__walls[y, i]:
                 collisions += 1
                 break
 
         # Right border
         for i in range(x, self.__width):
-            if self.__wall[y, i]:
+            if self.__walls[y, i]:
                 collisions += 1
                 break
 
         # Upper border
         for i in range(y, -1, -1):
-            if self.__wall[i, x]:
+            if self.__walls[i, x]:
                 collisions += 1
                 break
 
         # Lower border
         for i in range(y, self.__heigth):
-            if self.__wall[i, x]:
+            if self.__walls[i, x]:
                 collisions += 1
                 break
 
@@ -94,25 +100,25 @@ class House:
 
         # Left border
         for i in range(0, self.__width):
-            if np.any(self.__wall[:, i]):
+            if np.any(self.__walls[:, i]):
                 min_x = i
                 break
 
         # Right border
         for i in range(self.__width - 1, -1, -1):
-            if np.any(self.__wall[:, i]):
+            if np.any(self.__walls[:, i]):
                 max_x = i
                 break
 
         # Upper border
         for i in range(0, self.__heigth):
-            if np.any(self.__wall[i, :]):
+            if np.any(self.__walls[i, :]):
                 min_y = i
                 break
 
         # Lower border
         for i in range(self.__heigth - 1, -1, -1):
-            if np.any(self.__wall[i, :]):
+            if np.any(self.__walls[i, :]):
                 max_y = i
                 break
 
@@ -127,15 +133,25 @@ class House:
         """Returns the initial position for the robot"""
 
         min_x, max_x, min_y, max_y = self.get_surrounding_rectangle(offset, offset)
-        while True:
+
+        tries = 0
+        max_tries = 1000
+        while tries < max_tries:
             x = np.random.randint(min_x + 1, max_x)
             y = np.random.randint(min_y + 1, max_y)
 
             # Generate a spot for robot without walls, dust and inside the house
             if (
-                not self.__wall[y, x]
+                not self.__walls[y, x]
                 and not self.__dust[y, x]
                 and self.is_inside_house(x, y)
             ):
 
                 return (x, y)
+
+            tries += 1
+
+        # Use default walls
+        self.__walls = self.__default_walls
+        self.__dust = np.full((self.__heigth, self.__width), False)
+        return self.get_charging_station_location(offset)

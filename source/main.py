@@ -12,7 +12,7 @@ def main():
     mode = choose_game_mode()
     walls = draw_walls()
 
-    house = House(WIDTH, HEIGHT, walls)
+    house = House(WIDTH, HEIGHT, walls, DEFAULT_WALLS)
     robot = VacuumRobot(
         ROBOT_LENGTH // 2, *house.get_charging_station_location(ROBOT_LENGTH)
     )

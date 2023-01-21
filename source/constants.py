@@ -10,10 +10,12 @@ N_DUST = 100  # number of dust
 LINEAR_VELOCITY = 200  # Pixel/s
 ANGULAR_VELOCITY = 2 * np.pi  # Rad/s
 
+##### Default #####
 WIDTH, HEIGHT = 960, 540  # Pixels
 ROBOT_LENGTH = 50  # Pixels
 DUST_WIDTH, DUST_HEIGHT = 18, 12  # Pixels
 WALL_WIDTH = 3  # Pixels
+DEFAULT_WALLS = np.load(os.path.join("assets", "default_walls.npy"))
 
 ##### Main screen #####
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -36,6 +38,7 @@ VACUUM_SOUND.set_volume(0.05)
 
 ##### Text Fonts #####
 TEXT_FONT = pygame.font.SysFont("comicsans", 40)
+
 
 ##### Colors #####
 GREY = (220, 220, 220)
