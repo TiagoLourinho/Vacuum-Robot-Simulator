@@ -21,7 +21,7 @@ def show_loading_screen():
     image_rect.center = (WIDTH // 2, 2 * HEIGHT // 3)
 
     # Blit and update
-    SCREEN.fill((170, 238, 187))
+    SCREEN.fill(PY_GREEN)
     SCREEN.blit(text, text_rect)
     SCREEN.blit(image, image_rect)
 
@@ -268,7 +268,7 @@ def show_final_score(start_time, final_time):
     seconds = round(final_time - start_time)
     time_text = font.render(f"Time: {seconds//60}min{seconds%60}s", 1, BLACK)
 
-    SCREEN.fill(GREY)  # Background
+    SCREEN.fill(PY_GREEN)  # Background
 
     SCREEN.blit(
         message_text,
