@@ -16,7 +16,7 @@ def main():
     robot = VacuumRobot(
         ROBOT_LENGTH // 2, *house.get_charging_station_location(ROBOT_LENGTH)
     )
-    controller = Controller(LINEAR_VELOCITY, ANGULAR_VELOCITY, mode)
+    controller = Controller(LINEAR_VELOCITY, ANGULAR_VELOCITY, mode, FREQUENCY)
 
     house.generate_dust(N_DUST, DUST_WIDTH, DUST_HEIGHT)
 

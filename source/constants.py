@@ -8,7 +8,7 @@ pygame.init()
 FREQUENCY = 30  # Hz
 N_DUST = 100  # number of dust
 LINEAR_VELOCITY = 200  # Pixel/s
-ANGULAR_VELOCITY = 2 * np.pi  # Rad/s
+ANGULAR_VELOCITY = np.pi  # Rad/s
 
 ##### Default #####
 WIDTH, HEIGHT = 960, 540  # Pixels
