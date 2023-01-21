@@ -5,6 +5,28 @@ from constants import *
 from adts import House, VacuumRobot, Button
 
 
+def show_loading_screen():
+    """Show loading screen"""
+    font = pygame.font.SysFont("comicsans", 70, bold=True)
+    text = font.render("Vacuum Robot Simulator", 1, BLACK)
+    text_rect = text.get_rect()
+    text_rect.center = (WIDTH // 2, HEIGHT // 3)
+
+    image = pygame.transform.scale(
+        pygame.image.load(os.path.join("assets", "robot.png")),
+        (text.get_width() // 3, text.get_width() // 3),
+    )
+    image_rect = image.get_rect()
+    image_rect.center = (WIDTH // 2, 2 * HEIGHT // 3)
+
+    SCREEN.fill((170, 238, 187))
+    SCREEN.blit(text, text_rect)
+    SCREEN.blit(image, image_rect)
+
+    pygame.display.update()
+    pygame.time.delay(2000)
+
+
 def choose_game_mode():
     """Chooses the game mode to play"""
 
@@ -98,8 +120,8 @@ def choose_game_mode():
                     "A - Rotate counter-clockwise",
                     "S - Move backwards",
                     "D - Rotate clockwise",
-                    "SPACEBAR - Turn on vacuum",
-                    "LEFT SHIFT - STOP",
+                    "Space bar - Turn on vacuum",
+                    "Enter - Stop robot",
                 ]
 
                 text = [TEXT_FONT.render(t, 1, BLACK) for t in text]
@@ -151,7 +173,7 @@ def draw_walls():
     start_button = Button(TEXT_FONT, "Start Game", BLACK, BLUE, LIGHT_BLUE, (5, 5))
 
     instruction_text = TEXT_FONT.render(
-        "Draw the house walls (or not, to use the default)", 1, BLACK
+        "Draw the house walls (or don't, to use the default)", 1, BLACK
     )
     SCREEN.blit(
         instruction_text,

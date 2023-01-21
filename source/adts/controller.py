@@ -59,7 +59,7 @@ class Controller:
                 self.__controls = np.array([-self.__default[0], 0])
             elif keys[pygame.K_d]:
                 self.__controls = np.array([0, -self.__default[1]])
-            elif keys[pygame.K_LSHIFT]:
+            elif keys[pygame.K_RETURN]:
                 self.__controls = np.array([0, 0])
 
             self.__motors = keys[pygame.K_SPACE]

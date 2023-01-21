@@ -7,7 +7,7 @@ from utils import *
 
 
 def main():
-    start_time = time.time()
+    show_loading_screen()
 
     mode = choose_game_mode()
     walls = draw_walls()
@@ -26,6 +26,7 @@ def main():
 
     vacuum_sound_is_playing = False
 
+    start_time = time.time()
     while True:
         clock.tick(FREQUENCY)
 
