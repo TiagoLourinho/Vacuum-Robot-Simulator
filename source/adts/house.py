@@ -1,5 +1,7 @@
 import numpy as np
 
+from .robot import VacuumRobot
+
 
 class House:
     """Represents a house with dust"""
@@ -116,3 +118,36 @@ class House:
                 break
 
         return min_x, max_x, min_y, max_y
+
+    def is_following_wall(self, robot: VacuumRobot, point):
+        """Checks if the robot is following a wall (its back right side is close to the wall)"""
+
+        *pos, theta = robot.get_state()
+        r = int(robot.get_radius())
+
+        R = np.array(
+            [
+                [np.cos(theta), np.sin(theta)],
+                [-np.sin(theta), np.cos(theta)],
+            ]
+        )
+
+        if point == "back":
+            follow_point = R @ np.array([-r, r]) + pos
+        else:
+            follow_point = R @ np.array([r, r]) + pos
+
+        # Generate pixels at the right of the robot
+        check_points = []
+        for r in range(-r, r // 4):
+            check_points.append(
+                follow_point
+                + r * np.array([np.cos(theta - np.pi / 2), -np.sin(theta - np.pi / 2)])
+            )
+
+        check_points = np.array(check_points, dtype=int)
+        try:
+            return np.any(self.walls[check_points[:, 1], check_points[:, 0]])
+
+        except IndexError:
+            return False

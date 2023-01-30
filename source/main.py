@@ -61,7 +61,12 @@ def main():
                 VACUUM_SOUND.stop()
             break
 
-        controls, vacuuming = controller.get_controls(pygame.key.get_pressed())
+        controls, vacuuming = controller.get_controls(
+            pygame.key.get_pressed(),
+            house.is_following_wall(robot, "back"),
+            house.is_following_wall(robot, "front"),
+            robot,
+        )
 
         robot.move(controls, 1 / FREQUENCY)
 
@@ -70,13 +75,25 @@ def main():
             for vacuumed in pygame.sprite.spritecollide(robot, dust_group, dokill=True):
                 house.clean(*vacuumed.get_pos())
 
+        walls_collided = pygame.sprite.spritecollide(robot, walls_group, dokill=False)
+
         # Hit wall
-        if (
-            pygame.sprite.spritecollideany(robot, walls_group)
-            or not robot.get_rect() in SCREEN.get_rect()
-        ):
-            COLLISION_SOUND.play()
-            controller.collided()
+        if walls_collided:
+
+            # Compensante for the robot being represented as a rectangle
+            for w in walls_collided:
+                if np.linalg.norm(w.pos - robot.get_state()[:2]) <= robot.get_radius():
+                    if mode == "manual":
+                        COLLISION_SOUND.play()
+                    controller.collide()
+                    robot.collided()
+
+                    break
+        # Left screen
+        elif not robot.get_rect() in SCREEN.get_rect():
+            if mode == "manual":
+                COLLISION_SOUND.play()
+            controller.collide()
             robot.collided()
 
         # Vacuum sound management

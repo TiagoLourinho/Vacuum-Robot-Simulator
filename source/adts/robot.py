@@ -43,6 +43,7 @@ class VacuumRobot(pygame.sprite.Sprite):
         """Returns to the previous state"""
 
         self.state = self.previous_state
+        self.rect.center = self.state[:2]
 
     def draw(self, surface: pygame.Surface):
         """Blits the robot to the screen"""
@@ -81,3 +82,13 @@ class VacuumRobot(pygame.sprite.Sprite):
         """Getter for the rectangle"""
 
         return self.rect
+
+    def get_radius(self) -> float:
+        """Getter for the radius"""
+
+        return self.radius
+
+    def get_state(self) -> np.array:
+        """Getter for the state"""
+
+        return self.state.copy()
