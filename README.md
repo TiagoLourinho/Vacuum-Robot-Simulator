@@ -1,5 +1,5 @@
 # Vacuum-Robot-Simulator
-A vacuum robot simulator made in pygame
+A vacuum robot simulator/game made in pygame
 
 # How to play
 
@@ -7,7 +7,7 @@ A vacuum robot simulator made in pygame
 
 2. Choose the type of robot control from:
 
-    - Automatic control: The controller controls the robot with a random walk algorithm
+    - Automatic control: The controller controls the robot with a wall-following algorithm
 
     - Manual control: The player controls the robot with the following controls
 
