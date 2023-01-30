@@ -179,7 +179,7 @@ def draw_walls(size):
         ),
     )
 
-    walls = []
+    walls = set()
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -200,8 +200,9 @@ def draw_walls(size):
                 for x in range(-size // 2, size // 2 + 1):
                     for y in range(-size // 2, size // 2 + 1):
                         cur = (min(pos[0] + x, WIDTH - 1), min(pos[1] + y, HEIGHT - 1))
-                        walls.append(cur)
-                        pygame.draw.line(SCREEN, BROWN, cur, cur)
+                        if cur not in walls:
+                            walls.add(cur)
+                            pygame.draw.line(SCREEN, BROWN, cur, cur)
 
         start_button.draw(SCREEN, pos)
         pygame.display.update()
