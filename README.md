@@ -3,7 +3,7 @@ A vacuum robot simulator/game made in pygame
 
 # How to play
 
-1. Run `main.py` while inside the main folder (so the `assets` can be loaded)
+1. Run `python3 source/main.py` while inside the main folder (so the `assets` can be loaded)
 
 2. Choose the type of robot control from:
 
