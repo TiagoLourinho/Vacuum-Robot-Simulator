@@ -20,3 +20,6 @@ A vacuum robot simulator/game made in pygame
 4. Try to vacuum all dust in the shortest time possible
 
 5. The simulation ends when all dust was cleaned
+
+
+*Note*: The appearance of the simulator might vary depending on the operating system used, and the monitor resolution.
