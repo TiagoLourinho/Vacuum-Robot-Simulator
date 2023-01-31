@@ -7,7 +7,7 @@ A vacuum robot simulator/game made in pygame
 
 2. Choose the type of robot control from:
 
-    - Automatic control: The controller controls the robot with a wall-following algorithm
+    - Automatic control: The controller controls the robot with a **wall-following algorithm**
 
     - Manual control: The player controls the robot with the following controls
 
