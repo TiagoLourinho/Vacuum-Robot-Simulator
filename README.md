@@ -23,3 +23,9 @@ A vacuum robot simulator/game made in pygame
 
 
 *Note*: The appearance of the simulator might vary depending on the operating system used, and the monitor resolution.
+
+# Example
+
+A simulation example in the default map:
+
+![A simulation example in the default map](/assets/example.png "Simulator")
